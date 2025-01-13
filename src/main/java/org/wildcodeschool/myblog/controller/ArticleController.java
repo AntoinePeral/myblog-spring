@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.wildcodeschool.myblog.model.Article;
+import org.wildcodeschool.myblog.model.Category;
 import org.wildcodeschool.myblog.repository.ArticleRepository;
+import org.wildcodeschool.myblog.repository.CategoryRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,9 +17,14 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleRepository articleRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ArticleController(ArticleRepository articleRepository) {
+    public ArticleController(
+            ArticleRepository articleRepository,
+            CategoryRepository categoryRepository)
+    {
         this.articleRepository = articleRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
@@ -56,7 +63,6 @@ public class ArticleController {
         return ResponseEntity.ok(articles);
     }
 
-
     @GetMapping("/after")
     public ResponseEntity<List<Article>> getArticlesCreateAfter(@RequestParam LocalDateTime date){
         List<Article> articles = articleRepository.findByCreatedAtAfter(date);
@@ -65,7 +71,6 @@ public class ArticleController {
         }
         return ResponseEntity.ok(articles);
     }
-
 
     @GetMapping("/lastest")
     public ResponseEntity<List<Article>> getFiveLastArticles(){
@@ -76,15 +81,20 @@ public class ArticleController {
         return ResponseEntity.ok(articles);
     }
 
-
-
-
-
-
     @PostMapping
     public ResponseEntity<Article> createArticle(@RequestBody Article article) {
         article.setCreatedAt(LocalDateTime.now());
         article.setUpdatedAt(LocalDateTime.now());
+
+        // Ajout de la catégorie
+        if (article.getCategory() != null) {
+            Category category = categoryRepository.findById(article.getCategory().getId()).orElse(null);
+            if (category == null) {
+                return ResponseEntity.badRequest().body(null);
+            }
+            article.setCategory(category);
+        }
+
         Article savedArticle = articleRepository.save(article);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArticle);
     }
@@ -101,6 +111,14 @@ public class ArticleController {
         article.setContent(articleDetails.getContent());
         article.setUpdatedAt(LocalDateTime.now());
 
+        // Mise à jour de la catégorie
+        if (articleDetails.getCategory() != null) {
+            Category category = categoryRepository.findById(articleDetails.getCategory().getId()).orElse(null);
+            if (category == null) {
+                return ResponseEntity.badRequest().body(null);
+            }
+            article.setCategory(category);
+        }
         Article updatedArticle = articleRepository.save(article);
         return ResponseEntity.ok(updatedArticle);
     }
