@@ -57,6 +57,7 @@ public class ImageController {
             return ResponseEntity.notFound().build();
         }
         image.setUrl(imageDetails.getUrl());
+        image.setArticles(imageDetails.getArticles());
         Image updatedImage = imageRepository.save(image);
         return ResponseEntity.ok(convertToDTO(updatedImage));
     }
