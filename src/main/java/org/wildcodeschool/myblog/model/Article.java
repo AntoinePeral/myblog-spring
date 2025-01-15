@@ -21,6 +21,9 @@ public class Article {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @OneToMany (mappedBy = "article")
+    private List<ArticleAuthor> articleAuthors;
+
     @ManyToOne
     @JoinColumn (name= "category_id")
     private Category category;
@@ -75,6 +78,7 @@ public class Article {
         this.updatedAt = updatedAt;
     }
 
+
     public Category getCategory() {
         return category;
     }
@@ -89,5 +93,13 @@ public class Article {
 
     public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+    public List<ArticleAuthor> getArticleAuthors() {
+        return articleAuthors;
+    }
+
+    public void setArticleAuthors(List<ArticleAuthor> articleAuthors) {
+        this.articleAuthors = articleAuthors;
     }
 }
