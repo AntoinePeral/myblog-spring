@@ -1,12 +1,17 @@
 package org.wildcodeschool.myblog.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.wildcodeschool.myblog.model.Article;
 import org.wildcodeschool.myblog.model.Author;
 
 public class ArticleAuthorDTO {
     private Long id;
+
+    @JsonIgnore
     private Author author;
+    @JsonIgnore
     private Article article;
+
     private String contribution;
 
     public Long getId() {

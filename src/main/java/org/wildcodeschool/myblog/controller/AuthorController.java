@@ -3,14 +3,13 @@ package org.wildcodeschool.myblog.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.wildcodeschool.myblog.dto.ArticleDTO;
+import org.wildcodeschool.myblog.dto.ArticleAuthorDTO;
 import org.wildcodeschool.myblog.dto.AuthorDTO;
 import org.wildcodeschool.myblog.model.*;
 import org.wildcodeschool.myblog.repository.ArticleAuthorRepository;
 import org.wildcodeschool.myblog.repository.ArticleRepository;
 import org.wildcodeschool.myblog.repository.AuthorRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,24 +140,16 @@ public class AuthorController {
         authorDTO.setId(author.getId());
         authorDTO.setLastname(author.getLastname());
         authorDTO.setFirstname(author.getFirstname());
-        if(author.getArticleAuthors() != null){
-            authorDTO.setArticleList(
-                    author.getArticleAuthors()
-                    .stream()
-                    .filter(articleAuthor -> articleAuthor.getAuthor() != null)
+        if (author.getArticleAuthors() != null) {
+            List<ArticleAuthorDTO> articleAuthorDTOs = author.getArticleAuthors().stream()
                     .map(articleAuthor -> {
-                            ArticleDTO articleDTO = new ArticleDTO();
-                            articleDTO.setId(articleAuthor.getArticle().getId());
-                            articleDTO.setTitle(articleAuthor.getArticle().getTitle());
-                            articleDTO.setContent(articleAuthor.getArticle().getContent());
-                            articleDTO.setCategoryName(articleAuthor.getArticle().getCategory().getName());
-                            articleDTO.setUpdatedAt(articleAuthor.getArticle().getUpdatedAt());
-                            if (articleAuthor.getArticle().getImages() != null) {
-                                articleDTO.setImageUrls(articleAuthor.getArticle().getImages().stream().map(Image::getUrl).collect(Collectors.toList()));
-                            }
-                            return articleDTO;
-                        })
-                    .collect(Collectors.toList()));
+                        ArticleAuthorDTO dto = new ArticleAuthorDTO();
+                        dto.setId(articleAuthor.getId());
+                        dto.setContribution(articleAuthor.getContribution());
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+            authorDTO.setArticleAuthors(articleAuthorDTOs);
         }
         return authorDTO;
     }
