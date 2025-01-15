@@ -10,6 +10,7 @@ import org.wildcodeschool.myblog.model.*;
 import org.wildcodeschool.myblog.repository.*;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +81,10 @@ public class ArticleController {
     }
 
     @GetMapping("/after")
-    public ResponseEntity<List<ArticleDTO>> getArticlesCreateAfter(@RequestParam LocalDateTime date){
-        List<Article> articles = articleRepository.findByCreatedAtAfter(date);
+    public ResponseEntity<List<ArticleDTO>> getArticlesCreateAfter(@RequestParam String date){
+        LocalDate searchNewDate  = LocalDate.parse(date);
+        LocalDateTime newDate = searchNewDate.atStartOfDay();
+        List<Article> articles = articleRepository.findByCreatedAtAfter(newDate);
         if(articles.isEmpty()){
             return ResponseEntity.noContent().build();
         }
@@ -90,7 +93,7 @@ public class ArticleController {
     }
 
     @GetMapping("/lastest")
-    public ResponseEntity<List<ArticleDTO>> getFiveLastArticles(){
+    public ResponseEntity<List<ArticleDTO>> getLastFiveArticles(){
         List<Article> articles = articleRepository.findFirst5ByOrderByCreatedAtDesc();
         if(articles.isEmpty()){
             return ResponseEntity.noContent().build();
