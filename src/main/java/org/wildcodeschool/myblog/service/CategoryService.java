@@ -2,6 +2,7 @@ package org.wildcodeschool.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.wildcodeschool.myblog.dto.CategoryDTO;
+import org.wildcodeschool.myblog.exception.ResourceNotFoundException;
 import org.wildcodeschool.myblog.mapper.CategoryMapper;
 import org.wildcodeschool.myblog.model.Category;
 import org.wildcodeschool.myblog.repository.CategoryRepository;
@@ -23,21 +24,22 @@ public class CategoryService {
 
     public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
+        if(categories.isEmpty()) {
+            throw new ResourceNotFoundException("Aucune catégorie trouvée");
+        }
         return categories.stream().map(categoryMapper::convertToDTO).collect(Collectors.toList());
     }
 
     public CategoryDTO getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-        if(category == null) {
-            return null;
-        }
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Aucune catégorie avec l'id : " + id + " n'a été trouvé"));
         return categoryMapper.convertToDTO(category);
     }
 
     public List<CategoryDTO> getCategoriesByName(String searchTerms) {
         List<Category> categories = categoryRepository.findByNameContaining(searchTerms);
         if (categories.isEmpty()) {
-            return null;
+            throw new ResourceNotFoundException("Aucune catégorie trouvée avec ce nom");
         }
         return categories.stream().map(categoryMapper::convertToDTO).collect(Collectors.toList());
     }
@@ -48,22 +50,17 @@ public class CategoryService {
     }
 
     public CategoryDTO updateCategory( Long id,  Category categoryDetails) {
-        Category category = categoryRepository.findById(id).orElse(null);
-        if (category == null) {
-            return null;
-        }
-
-        category.setName(categoryDetails.getName());
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Aucune catégorie avec l'id : " + id + " n'a été trouvé"));
+         category.setName(categoryDetails.getName());
 
         Category updatedCategory = categoryRepository.save(category);
         return categoryMapper.convertToDTO(updatedCategory);
     }
 
     public boolean deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-        if (category == null) {
-            return false;
-        }
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Aucune catégorie avec l'id : " + id + " n'a été trouvé"));
         categoryRepository.delete(category);
         return true;
     }
