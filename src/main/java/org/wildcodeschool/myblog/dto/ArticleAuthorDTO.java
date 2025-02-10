@@ -9,8 +9,8 @@ public class ArticleAuthorDTO {
 
     @JsonIgnore
     private Author author;
-    @JsonIgnore
-    private Article article;
+
+    private String article;
 
     private String contribution;
 
@@ -30,11 +30,11 @@ public class ArticleAuthorDTO {
         this.author = author;
     }
 
-    public Article getArticle() {
+    public String getArticle() {
         return article;
     }
 
-    public void setArticle(Article article) {
+    public void setArticle(String article) {
         this.article = article;
     }
 

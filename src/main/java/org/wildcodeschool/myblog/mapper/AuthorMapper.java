@@ -20,6 +20,7 @@ public class AuthorMapper {
                     .map(articleAuthor -> {
                         ArticleAuthorDTO dto = new ArticleAuthorDTO();
                         dto.setId(articleAuthor.getId());
+                        dto.setArticle(articleAuthor.getArticle().getTitle());
                         dto.setContribution(articleAuthor.getContribution());
                         return dto;
                     })
