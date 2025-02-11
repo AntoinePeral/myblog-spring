@@ -16,16 +16,17 @@ public class AuthorMapper {
         authorDTO.setLastname(author.getLastname());
         authorDTO.setFirstname(author.getFirstname());
         if (author.getArticleAuthors() != null) {
-            List<ArticleAuthorDTO> articleAuthorDTOs = author.getArticleAuthors().stream()
-                    .map(articleAuthor -> {
-                        ArticleAuthorDTO dto = new ArticleAuthorDTO();
-                        dto.setId(articleAuthor.getId());
-                        dto.setArticle(articleAuthor.getArticle().getTitle());
-                        dto.setContribution(articleAuthor.getContribution());
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-            authorDTO.setArticleAuthors(articleAuthorDTOs);
+            authorDTO.setArticleAuthors(author.getArticleAuthors()
+                .stream()
+                .filter(articleAuthor -> articleAuthor.getArticle() != null)
+                .map(articleAuthor -> {
+                    ArticleAuthorDTO articleAuthorDTO = new ArticleAuthorDTO();
+                    articleAuthorDTO.setArticleId(articleAuthor.getArticle().getId());
+                    articleAuthorDTO.setAuthorId(articleAuthor.getAuthor().getId());
+                    articleAuthorDTO.setContribution(articleAuthor.getContribution());
+                    return articleAuthorDTO;
+                })
+                .collect(Collectors.toList()));;
         }
         return authorDTO;
     }

@@ -1,6 +1,7 @@
 package org.wildcodeschool.myblog.mapper;
 
 import org.springframework.stereotype.Component;
+import org.wildcodeschool.myblog.dto.ArticleAuthorDTO;
 import org.wildcodeschool.myblog.dto.ArticleDTO;
 import org.wildcodeschool.myblog.dto.AuthorDTO;
 import org.wildcodeschool.myblog.model.Article;
@@ -24,14 +25,14 @@ public class ArticleMapper {
         }
 
         if (article.getArticleAuthors() != null) {
-            articleDTO.setAuthors(article.getArticleAuthors().stream()
+            articleDTO.setArticleAuthorDTOs(article.getArticleAuthors().stream()
                     .filter(articleAuthor -> articleAuthor.getAuthor() != null)
                     .map(articleAuthor -> {
-                        AuthorDTO authorDTO = new AuthorDTO();
-                        authorDTO.setId(articleAuthor.getAuthor().getId());
-                        authorDTO.setFirstname(articleAuthor.getAuthor().getFirstname());
-                        authorDTO.setLastname(articleAuthor.getAuthor().getLastname());
-                        return authorDTO;
+                        ArticleAuthorDTO articleAuthorDTO = new ArticleAuthorDTO();
+                        articleAuthorDTO.setArticleId(articleAuthor.getArticle().getId());
+                        articleAuthorDTO.setAuthorId(articleAuthor.getAuthor().getId());
+                        articleAuthorDTO.setContribution(articleAuthor.getContribution());
+                        return articleAuthorDTO;
                     })
                     .collect(Collectors.toList()));
         }
