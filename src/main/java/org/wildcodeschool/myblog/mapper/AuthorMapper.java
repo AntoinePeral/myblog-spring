@@ -5,7 +5,6 @@ import org.wildcodeschool.myblog.dto.ArticleAuthorDTO;
 import org.wildcodeschool.myblog.dto.AuthorDTO;
 import org.wildcodeschool.myblog.model.Author;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,16 +15,17 @@ public class AuthorMapper {
         authorDTO.setLastname(author.getLastname());
         authorDTO.setFirstname(author.getFirstname());
         if (author.getArticleAuthors() != null) {
-            List<ArticleAuthorDTO> articleAuthorDTOs = author.getArticleAuthors().stream()
+            authorDTO.setArticleAuthors(author.getArticleAuthors()
+                    .stream()
+                    .filter(articleAuthor -> articleAuthor.getArticle() != null)
                     .map(articleAuthor -> {
-                        ArticleAuthorDTO dto = new ArticleAuthorDTO();
-                        dto.setId(articleAuthor.getId());
-                        dto.setArticle(articleAuthor.getArticle().getTitle());
-                        dto.setContribution(articleAuthor.getContribution());
-                        return dto;
+                        ArticleAuthorDTO articleAuthorDTO = new ArticleAuthorDTO();
+                        articleAuthorDTO.setArticleId(articleAuthor.getArticle().getId());
+                        articleAuthorDTO.setAuthorId(articleAuthor.getAuthor().getId());
+                        articleAuthorDTO.setContribution(articleAuthor.getContribution());
+                        return articleAuthorDTO;
                     })
-                    .collect(Collectors.toList());
-            authorDTO.setArticleAuthors(articleAuthorDTOs);
+                    .collect(Collectors.toList()));
         }
         return authorDTO;
     }
