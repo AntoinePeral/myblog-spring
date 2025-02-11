@@ -17,16 +17,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/authors")
 public class AuthorController {
     private final AuthorRepository authorRepository;
-    private final ArticleAuthorRepository articleAuthorRepository;
-    private final ArticleRepository articleRepository;
 
-    public AuthorController(
-            ArticleAuthorRepository articleAuthorRepository,
-            AuthorRepository authorRepository,
-            ArticleRepository articleRepository){
-        this.articleAuthorRepository = articleAuthorRepository;
+
+    public AuthorController(AuthorRepository authorRepository){
         this.authorRepository = authorRepository;
-        this.articleRepository = articleRepository;
     }
 
     @GetMapping
@@ -50,24 +44,6 @@ public class AuthorController {
 
     @PostMapping
     public ResponseEntity<AuthorDTO> createAuthor(@RequestBody Author author){
-
-//        if(author.getArticleAuthors() != null){
-//            for(ArticleAuthor articleAuthor : author.getArticleAuthors()){
-//                Article article = articleAuthor.getArticle();
-//                article = articleRepository.findById(article.getId()).orElse(null);
-//
-//                if(article == null){
-//                    return ResponseEntity.badRequest().body(null);
-//                }
-//
-//                articleAuthor.setArticle(article);
-//                articleAuthor.setAuthor(author);
-//                articleAuthor.setContribution(articleAuthor.getContribution());
-//
-//                articleAuthorRepository.save(articleAuthor);
-//            }
-//        }
-
         Author savedAuthor = authorRepository.save(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(savedAuthor));
     }
@@ -83,36 +59,6 @@ public class AuthorController {
         author.setFirstname(authorDetails.getFirstname());
         author.setLastname(authorDetails.getLastname());
 
-//        if(authorDetails.getArticleAuthors() != null){
-//            // Supprimer manuellement les anciens ArticleAuthor
-//            for (ArticleAuthor oldArticleAuthor : authorDetails.getArticleAuthors()) {
-//                articleAuthorRepository.delete(oldArticleAuthor);
-//            }
-//
-//            List<ArticleAuthor> updatedArticleAuthors  = new ArrayList<>();
-//
-//            for(ArticleAuthor articleAuthor : authorDetails.getArticleAuthors()){
-//                Article article = articleAuthor.getArticle();
-//                article = articleRepository.findById(article.getId()).orElse(null);
-//
-//                if(article == null){
-//                    return ResponseEntity.badRequest().build();
-//                }
-//
-//                ArticleAuthor newArticleAuthor = new ArticleAuthor();
-//                newArticleAuthor.setArticle(article);
-//                newArticleAuthor.setAuthor(author);
-//                newArticleAuthor.setContribution(articleAuthor.getContribution());
-//
-//                updatedArticleAuthors.add(newArticleAuthor);
-//            }
-//
-//            for (ArticleAuthor articleAuthor : updatedArticleAuthors) {
-//                articleAuthorRepository.save(articleAuthor);
-//            }
-//
-//            author.setArticleAuthors(updatedArticleAuthors);
-//        }
         Author updatedAuthor = authorRepository.save(author);
         return ResponseEntity.ok(convertToDTO(updatedAuthor));
     }
@@ -122,12 +68,6 @@ public class AuthorController {
         Author author = authorRepository.findById(id).orElse(null);
         if(author == null){
             return ResponseEntity.notFound().build();
-        }
-
-        if(author.getArticleAuthors() != null){
-            for(ArticleAuthor articleAuthor : author.getArticleAuthors()){
-                articleAuthorRepository.delete(articleAuthor);
-            }
         }
 
         authorRepository.delete(author);
@@ -140,17 +80,17 @@ public class AuthorController {
         authorDTO.setId(author.getId());
         authorDTO.setLastname(author.getLastname());
         authorDTO.setFirstname(author.getFirstname());
-        if (author.getArticleAuthors() != null) {
-            List<ArticleAuthorDTO> articleAuthorDTOs = author.getArticleAuthors().stream()
-                    .map(articleAuthor -> {
-                        ArticleAuthorDTO dto = new ArticleAuthorDTO();
-                        dto.setId(articleAuthor.getId());
-                        dto.setContribution(articleAuthor.getContribution());
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-            authorDTO.setArticleAuthors(articleAuthorDTOs);
-        }
+        authorDTO.setArticleAuthorsDTOs(author.getArticleAuthors()
+                .stream()
+                .filter(articleAuthor -> articleAuthor.getArticle() != null)
+                .map(articleAuthor -> {
+                    ArticleAuthorDTO articleAuthorDTO = new ArticleAuthorDTO();
+                    articleAuthorDTO.setArticleId(articleAuthor.getArticle().getId());
+                    articleAuthorDTO.setAuthorId(articleAuthor.getAuthor().getId());
+                    articleAuthorDTO.setContribution(articleAuthor.getContribution());
+                    return articleAuthorDTO;
+                })
+                .collect(Collectors.toList()));;
         return authorDTO;
     }
 }

@@ -13,8 +13,7 @@ public class ArticleDTO {
     private LocalDateTime updatedAt;
     private String categoryName;
     private List<String> imageUrls;
-    private List<AuthorDTO> authors;
-
+    private List<ArticleAuthorDTO> articleAuthorDTOs;
 
 // Getters et setters
 
@@ -66,11 +65,11 @@ public class ArticleDTO {
         this.imageUrls = imageUrls;
     }
 
-    public List<AuthorDTO> getAuthors() {
-        return authors;
+    public List<ArticleAuthorDTO> getArticleAuthorDTOS() {
+        return articleAuthorDTOs;
     }
 
-    public void setAuthors(List<AuthorDTO> authors) {
-        this.authors = authors;
+    public void setArticleAuthorDTOS(List<ArticleAuthorDTO> articleAuthorDTOS) {
+        this.articleAuthorDTOs = articleAuthorDTOS;
     }
 }

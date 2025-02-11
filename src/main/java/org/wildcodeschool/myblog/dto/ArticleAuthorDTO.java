@@ -1,42 +1,12 @@
 package org.wildcodeschool.myblog.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.wildcodeschool.myblog.model.Article;
-import org.wildcodeschool.myblog.model.Author;
-
 public class ArticleAuthorDTO {
-    private Long id;
 
-    @JsonIgnore
-    private Author author;
-    @JsonIgnore
-    private Article article;
+    private Long articleId;
+
+    private Long authorId;
 
     private String contribution;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
-    }
 
     public String getContribution() {
         return contribution;
@@ -45,4 +15,22 @@ public class ArticleAuthorDTO {
     public void setContribution(String contribution) {
         this.contribution = contribution;
     }
+
+
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long auhtorId) {
+        this.authorId = auhtorId;
+    }
+
 }

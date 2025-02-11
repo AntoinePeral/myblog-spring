@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.wildcodeschool.myblog.dto.ArticleAuthorDTO;
 import org.wildcodeschool.myblog.dto.ArticleDTO;
 import org.wildcodeschool.myblog.dto.AuthorDTO;
 import org.wildcodeschool.myblog.model.*;
@@ -149,7 +150,7 @@ public class ArticleController {
 
                 articleAuthor.setAuthor(author);
                 articleAuthor.setArticle(savedArticle);
-                articleAuthor.setContribution(articleAuthor.getContribution());
+//                articleAuthor.setContribution(articleAuthor.getContribution());
 
                 articleAuthorRepository.save(articleAuthor);
             }
@@ -157,8 +158,6 @@ public class ArticleController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(savedArticle));
     }
-
-
 
     @PutMapping("/{id}")
     public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody Article articleDetails) {
@@ -273,14 +272,15 @@ public class ArticleController {
         }
 
         if (article.getArticleAuthors() != null) {
-            articleDTO.setAuthors(article.getArticleAuthors().stream()
+            articleDTO.setArticleAuthorDTOS(article.getArticleAuthors()
+                    .stream()
                     .filter(articleAuthor -> articleAuthor.getAuthor() != null)
                     .map(articleAuthor -> {
-                        AuthorDTO authorDTO = new AuthorDTO();
-                        authorDTO.setId(articleAuthor.getAuthor().getId());
-                        authorDTO.setFirstname(articleAuthor.getAuthor().getFirstname());
-                        authorDTO.setLastname(articleAuthor.getAuthor().getLastname());
-                        return authorDTO;
+                        ArticleAuthorDTO articleAuthorDTO = new ArticleAuthorDTO();
+                        articleAuthorDTO.setArticleId(articleAuthor.getArticle().getId());
+                        articleAuthorDTO.setAuthorId(articleAuthor.getAuthor().getId());
+                        articleAuthorDTO.setContribution(articleAuthor.getContribution());
+                        return articleAuthorDTO;
                     })
                     .collect(Collectors.toList()));
         }

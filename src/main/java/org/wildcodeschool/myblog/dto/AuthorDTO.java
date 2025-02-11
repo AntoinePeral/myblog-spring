@@ -6,7 +6,7 @@ public class AuthorDTO {
     private Long id;
     private String firstname;
     private String lastname;
-    private List<ArticleAuthorDTO> articleAuthors;
+    private List<ArticleAuthorDTO> articleAuthorsDTOs;
 
     public Long getId() {
         return id;
@@ -32,11 +32,12 @@ public class AuthorDTO {
         this.lastname = lastname;
     }
 
-    public List<ArticleAuthorDTO> getArticleAuthors() {
-        return articleAuthors;
+    public List<ArticleAuthorDTO> getArticleAuthorsDTOs() {
+        return articleAuthorsDTOs;
     }
 
-    public void setArticleAuthors(List<ArticleAuthorDTO> articleAuthors) {
-        this.articleAuthors = articleAuthors;
+    public void setArticleAuthorsDTOs(List<ArticleAuthorDTO> articleAuthorsDTOs) {
+        this.articleAuthorsDTOs = articleAuthorsDTOs;
     }
+
 }
