@@ -89,8 +89,8 @@ public class ArticleService {
 
     public ArticleDTO createArticle(ArticleCreateDTO articleCreateDTO) {
         Article article = articleMapper.convertToEntity(articleCreateDTO);
-        article.setCreatedAt(LocalDateTime.now());
-        article.setUpdatedAt(LocalDateTime.now());
+//        article.setCreatedAt(LocalDateTime.now());
+//        article.setUpdatedAt(LocalDateTime.now());
 
         // Gestion de la catégorie
         if (article.getCategory() != null) {

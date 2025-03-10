@@ -23,7 +23,7 @@ public class ArticleCreateDTO {
     private List<@Valid ImageDTO> images;
 
     @NotEmpty(message = "La liste des auteurs ne doit pas être vide")
-    private List<@Valid AuthorContributionDTO> authors;
+    private List<@Valid ArticleAuthorDTO> authors;
 
     public String getTitle() {
         return title;
@@ -57,11 +57,11 @@ public class ArticleCreateDTO {
         this.images = images;
     }
 
-    public List<AuthorContributionDTO> getAuthors() {
+    public List<ArticleAuthorDTO> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<AuthorContributionDTO> authors) {
+    public void setAuthors(List<ArticleAuthorDTO> authors) {
         this.authors = authors;
     }
 }

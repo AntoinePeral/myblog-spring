@@ -8,6 +8,16 @@ public class ArticleDTO {
     private String title;
     private String content;
     private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     private String categoryName;
     private List<String> imageUrls;
     private List<ArticleAuthorDTO> articleAuthorDTOs;

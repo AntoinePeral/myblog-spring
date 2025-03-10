@@ -16,6 +16,7 @@ public class ArticleMapper {
         articleDTO.setTitle(article.getTitle());
         articleDTO.setContent(article.getContent());
         articleDTO.setUpdatedAt(article.getUpdatedAt());
+        articleDTO.setCreatedAt(article.getCreatedAt());
         if (article.getCategory() != null) {
             articleDTO.setCategoryName(article.getCategory().getName());
         }
