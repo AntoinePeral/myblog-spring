@@ -9,15 +9,6 @@ public class ArticleDTO {
     private String content;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     private String categoryName;
     private List<String> imageUrls;
     private List<ArticleAuthorDTO> articleAuthorDTOs;
@@ -55,6 +46,14 @@ public class ArticleDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getCategoryName() {
