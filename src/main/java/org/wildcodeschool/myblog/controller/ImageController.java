@@ -1,6 +1,7 @@
 package org.wildcodeschool.myblog.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.wildcodeschool.myblog.dto.ImageDTO;
 import org.wildcodeschool.myblog.model.Image;
@@ -52,6 +53,7 @@ public class ImageController {
         return ResponseEntity.ok(updatedImage);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         if (imageService.deleteImage(id)) {

@@ -3,6 +3,8 @@ package org.wildcodeschool.myblog.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import org.wildcodeschool.myblog.dto.ArticleCreateDTO;
@@ -80,11 +82,18 @@ public class ArticleController {
     @PostMapping
     public ResponseEntity<ArticleDTO> createArticle(@Valid @RequestBody ArticleCreateDTO articleCreateDTO) {
         ArticleDTO savedArticleDTO = articleService.createArticle(articleCreateDTO);
+        if (savedArticleDTO == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArticleDTO);
     }
 
+    @PreAuthorize("#articleDetails.getAuthorIds().contains(authentication.principal.id)")
     @PutMapping("/{id}")
     public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody Article articleDetails) {
+        System.out.println("Article Authors IDs: " + articleDetails.getAuthorIds());
+        System.out.println("Authenticated User ID: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
         ArticleDTO updatedArticle = articleService.updateArticle(id, articleDetails);
         if(updatedArticle == null){
             return ResponseEntity.notFound().build();
@@ -92,6 +101,7 @@ public class ArticleController {
         return ResponseEntity.ok(updatedArticle);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
         if (articleService.deleteArticle(id)) {

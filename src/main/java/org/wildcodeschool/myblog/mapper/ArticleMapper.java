@@ -29,6 +29,7 @@ public class ArticleMapper {
                     .filter(articleAuthor -> articleAuthor.getAuthor() != null)
                     .map(articleAuthor -> {
                         ArticleAuthorDTO articleAuthorDTO = new ArticleAuthorDTO();
+                        articleAuthorDTO.setId(articleAuthor.getId());
                         articleAuthorDTO.setArticleId(articleAuthor.getArticle().getId());
                         articleAuthorDTO.setAuthorId(articleAuthor.getAuthor().getId());
                         articleAuthorDTO.setContribution(articleAuthor.getContribution());
@@ -44,42 +45,42 @@ public class ArticleMapper {
         Article article = new Article();
         article.setTitle(articleCreateDTO.getTitle());
         article.setContent(articleCreateDTO.getContent());
-        article.setCreatedAt(LocalDateTime.now());
-        article.setUpdatedAt(LocalDateTime.now());
-
-        if(articleCreateDTO.getCategoryId() != null){
-            Category category = new Category();
-            category.setId(articleCreateDTO.getCategoryId());
-            article.setCategory(category);
-        }
-
-        if(articleCreateDTO.getImages() != null){
-            article.setImages( articleCreateDTO.getImages()
-                    .stream()
-                    .map( image ->{
-                        Image newImage = new Image();
-                        newImage.setUrl(image.getUrl());
-                        return newImage;
-                    })
-                    .collect(Collectors.toList())
-            );
-        }
-
-        if(articleCreateDTO.getAuthors() != null){
-            article.setArticleAuthors(articleCreateDTO.getAuthors()
-                    .stream()
-                    .map(articleAuthorDTO -> {
-                        ArticleAuthor articleAuthor = new ArticleAuthor();
-                        Author author = new Author();
-                        author.setId(articleAuthorDTO.getAuthorId());
-                        articleAuthor.setAuthor(author);
-                        articleAuthor.setContribution(articleAuthorDTO.getContribution());
-                        return articleAuthor;
-                    })
-                    .collect(Collectors.toList())
-            );
-        }
-
+//        article.setCreatedAt(LocalDateTime.now());
+//        article.setUpdatedAt(LocalDateTime.now());
+//
+//        if(articleCreateDTO.getCategoryId() != null){
+//            Category category = new Category();
+//            category.setId(articleCreateDTO.getCategoryId());
+//            article.setCategory(category);
+//        }
+//
+//        if(articleCreateDTO.getImages() != null){
+//            article.setImages( articleCreateDTO.getImages()
+//                    .stream()
+//                    .map( image ->{
+//                        Image newImage = new Image();
+//                        newImage.setUrl(image.getUrl());
+//                        return newImage;
+//                    })
+//                    .collect(Collectors.toList())
+//            );
+//        }
+//
+//        if(articleCreateDTO.getAuthors() != null){
+//            article.setArticleAuthors(articleCreateDTO.getAuthors()
+//                    .stream()
+//                    .map(articleAuthorDTO -> {
+//                        ArticleAuthor articleAuthor = new ArticleAuthor();
+//                        Author author = new Author();
+//                        author.setId(articleAuthorDTO.getAuthorId());
+//                        articleAuthor.setAuthor(author);
+//                        articleAuthor.setContribution(articleAuthorDTO.getContribution());
+//                        return articleAuthor;
+//                    })
+//                    .collect(Collectors.toList())
+//            );
+//        }
+//
         return article;
     }
 }

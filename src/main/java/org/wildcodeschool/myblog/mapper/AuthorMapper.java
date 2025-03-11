@@ -20,6 +20,7 @@ public class AuthorMapper {
                     .filter(articleAuthor -> articleAuthor.getArticle() != null)
                     .map(articleAuthor -> {
                         ArticleAuthorDTO articleAuthorDTO = new ArticleAuthorDTO();
+                        articleAuthorDTO.setId(articleAuthor.getId());
                         articleAuthorDTO.setArticleId(articleAuthor.getArticle().getId());
                         articleAuthorDTO.setAuthorId(articleAuthor.getAuthor().getId());
                         articleAuthorDTO.setContribution(articleAuthor.getContribution());

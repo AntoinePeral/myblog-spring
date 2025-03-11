@@ -2,6 +2,7 @@ package org.wildcodeschool.myblog.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Article {
@@ -102,4 +103,11 @@ public class Article {
     public void setArticleAuthors(List<ArticleAuthor> articleAuthors) {
         this.articleAuthors = articleAuthors;
     }
+
+    public List<Long> getAuthorIds() {
+        return this.articleAuthors.stream()
+                .map(articleAuthor -> articleAuthor.getAuthor().getId()) // Récupérer l'ID de chaque auteur
+                .collect(Collectors.toList());
+    }
+
 }

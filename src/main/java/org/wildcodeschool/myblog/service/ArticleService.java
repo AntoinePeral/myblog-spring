@@ -1,10 +1,13 @@
 package org.wildcodeschool.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.wildcodeschool.myblog.dto.ArticleAuthorDTO;
 import org.wildcodeschool.myblog.dto.ArticleCreateDTO;
 import org.wildcodeschool.myblog.dto.ArticleDTO;
+import org.wildcodeschool.myblog.dto.ImageDTO;
 import org.wildcodeschool.myblog.exception.ResourceNotFoundException;
 import org.wildcodeschool.myblog.mapper.ArticleMapper;
+import org.wildcodeschool.myblog.mapper.ImageMapper;
 import org.wildcodeschool.myblog.model.*;
 import org.wildcodeschool.myblog.repository.*;
 
@@ -20,6 +23,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final ArticleMapper articleMapper;
+    private final ImageMapper imageMapper;
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
     private final AuthorRepository authorRepository;
@@ -28,12 +32,14 @@ public class ArticleService {
     public ArticleService(
             ArticleRepository articleRepository,
             ArticleMapper articleMapper,
+            ImageMapper imageMapper,
             CategoryRepository categoryRepository,
             ImageRepository imageRepository,
             AuthorRepository authorRepository,
             ArticleAuthorRepository articleAuthorRepository) {
         this.articleRepository = articleRepository;
         this.articleMapper = articleMapper;
+        this.imageMapper = imageMapper;
         this.categoryRepository = categoryRepository;
         this.imageRepository = imageRepository;
         this.authorRepository = authorRepository;
@@ -89,30 +95,29 @@ public class ArticleService {
 
     public ArticleDTO createArticle(ArticleCreateDTO articleCreateDTO) {
         Article article = articleMapper.convertToEntity(articleCreateDTO);
-//        article.setCreatedAt(LocalDateTime.now());
-//        article.setUpdatedAt(LocalDateTime.now());
+        article.setCreatedAt(LocalDateTime.now());
+        article.setUpdatedAt(LocalDateTime.now());
 
         // Gestion de la catégorie
-        if (article.getCategory() != null) {
-            Category category = categoryRepository.findById(article.getCategory().getId()).orElse(null);
-            if (category == null) {
-                return null;
-            }
+        if (articleCreateDTO.getCategoryId() != null) {
+            Category category = categoryRepository.findById(articleCreateDTO.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
             article.setCategory(category);
         }
 
         // Gestion des images
-        if (article.getImages() != null && !article.getImages().isEmpty()) {
+        if (articleCreateDTO.getImages() != null && !articleCreateDTO.getImages().isEmpty()) {
             List<Image> validImages = new ArrayList<>();
-            for (Image image : article.getImages()) {
-                if (image.getId() != null) {
-                    Image existingImage = imageRepository.findById(image.getId()).orElse(null);
+            for (ImageDTO imageDTO : articleCreateDTO.getImages()) {
+                if (imageDTO.getId() != null) {
+                    Image existingImage = imageRepository.findById(imageDTO.getId()).orElse(null);
                     if (existingImage != null) {
                         validImages.add(existingImage);
                     } else {
                         return null;
                     }
                 } else {
+                    Image image = imageMapper.convertToEntity(imageDTO);
                     Image savedImage = imageRepository.save(image);
                     validImages.add(savedImage);
                 }
@@ -123,21 +128,25 @@ public class ArticleService {
         Article savedArticle = articleRepository.save(article);
 
         // Gestion des auteurs
-        if (article.getArticleAuthors() != null) {
-            for (ArticleAuthor articleAuthor : article.getArticleAuthors()) {
-                Author author = articleAuthor.getAuthor();
-                author = authorRepository.findById(author.getId()).orElse(null);
+        if (articleCreateDTO.getAuthors() != null) {
+            List<ArticleAuthor> articleAuthors = new ArrayList<>();
+            for (ArticleAuthorDTO articleAuthorDTO : articleCreateDTO.getAuthors()) {
+                Long authorId = articleAuthorDTO.getAuthorId();
+                 Author author = authorRepository.findById(authorId).orElse(null);
                 if (author == null) {
                     return null;
                 }
 
+                ArticleAuthor articleAuthor = new ArticleAuthor();
                 articleAuthor.setAuthor(author);
                 articleAuthor.setArticle(savedArticle);
-                articleAuthor.setContribution(articleAuthor.getContribution());
+                articleAuthor.setContribution(articleAuthorDTO.getContribution());
 
-                articleAuthorRepository.save(articleAuthor);
+                articleAuthors.add(articleAuthorRepository.save(articleAuthor)); // ajoute les articles dans la liste articlesAuthors et les sauvegarde en BDD
             }
+            savedArticle.setArticleAuthors(articleAuthors); // 🔥 Rattache les auteurs à l'article
         }
+
 
         return articleMapper.convertToDTO(savedArticle);
     }
