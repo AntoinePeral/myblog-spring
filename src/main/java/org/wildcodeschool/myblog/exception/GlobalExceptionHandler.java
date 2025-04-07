@@ -56,9 +56,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Interdiction d'entrée, vous n'avez pas les droits", HttpStatus.FORBIDDEN);
     }
 
+
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect");
     }
+
 
 }
