@@ -14,6 +14,7 @@ public class MyBlogApplication {
 		System.setProperty("spring.datasource.password", dotenv.get("DB_PASSWORD"));
 		System.setProperty("JWT_SECRET_KEY", dotenv.get("JWT_SECRET_KEY"));
 		System.setProperty("JWT_EXPIRATION", dotenv.get("JWT_EXPIRATION"));
+		System.setProperty("CORS_ALLOWED_ORIGIN", dotenv.get("CORS_ALLOWED_ORIGIN"));
 
 		SpringApplication.run(MyBlogApplication.class, args);
 	}

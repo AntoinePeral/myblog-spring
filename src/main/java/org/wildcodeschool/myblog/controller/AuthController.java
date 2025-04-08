@@ -6,8 +6,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.wildcodeschool.myblog.dto.ProfileDTO;
 import org.wildcodeschool.myblog.dto.UserLoginDTO;
 import org.wildcodeschool.myblog.dto.UserRegistrationDTO;
 import org.wildcodeschool.myblog.model.User;
@@ -15,10 +17,12 @@ import org.wildcodeschool.myblog.repository.UserRepository;
 import org.wildcodeschool.myblog.security.AuthenticationService;
 import org.wildcodeschool.myblog.service.UserService;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/auth")
 public class AuthController {
     private final UserService userService;
@@ -68,5 +72,15 @@ public class AuthController {
 
         Optional<User> registeredUser = userRepository.findByEmail(email);
         return ResponseEntity.status(HttpStatus.OK).body(registeredUser.orElse(null));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileDTO> getUserProfile(Authentication authentication) {
+        String email = authentication.getName();
+        GrantedAuthority[] roles = authentication.getAuthorities().toArray(new GrantedAuthority[0]);
+        ProfileDTO profile = new ProfileDTO();
+        profile.setEmail(email);
+        profile.setRoles(roles);
+        return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
 }
