@@ -3,36 +3,16 @@ package org.wildcodeschool.myblog.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ArticleDTO {
+public class ArticleUpdateDTO {
     private Long id;
     private String title;
     private String content;
-    private LocalDateTime updatedAt;
-    private LocalDateTime createdAt;
-    private String categoryName;
-    private List<String> imageUrls;
-    private List<Long> imageIds; // ✅ nouvelle propriété
-    private List<ArticleAuthorDTO> articleAuthorDTOs;
     private boolean published;
-
-
-// Getters et setters
-
-    public List<Long> getImageIds() {
-        return imageIds;
-    }
-
-    public void setImageIds(List<Long> imageIds) {
-        this.imageIds = imageIds;
-    }
-
-    public boolean getPublished() {
-        return published;
-    }
-
-    public void setPublished(boolean published) {
-        this.published = published;
-    }
+    private String categoryName;
+    private List<ImageDTO> images; // remplace imageIds + imageUrls
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private List<ArticleAuthorDTO> articleAuthorDTOs;
 
     public Long getId() {
         return id;
@@ -58,12 +38,30 @@ public class ArticleDTO {
         this.content = content;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public boolean getPublished() {
+        return published;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+
+    public List<ImageDTO> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ImageDTO> images) {
+        this.images = images;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -74,20 +72,12 @@ public class ArticleDTO {
         this.createdAt = createdAt;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public List<String> getImageUrls() {
-        return imageUrls;
-    }
-
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public List<ArticleAuthorDTO> getArticleAuthorDTOs() {
@@ -96,5 +86,11 @@ public class ArticleDTO {
 
     public void setArticleAuthorDTOs(List<ArticleAuthorDTO> articleAuthorDTOs) {
         this.articleAuthorDTOs = articleAuthorDTOs;
+    }
+
+    @Override
+    public String toString() {
+        System.out.println("articleAuthorDTOs:" + articleAuthorDTOs );
+        return "";
     }
 }

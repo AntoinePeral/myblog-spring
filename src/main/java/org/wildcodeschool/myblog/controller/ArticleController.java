@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.wildcodeschool.myblog.dto.ArticleCreateDTO;
 import org.wildcodeschool.myblog.dto.ArticleDTO;
+import org.wildcodeschool.myblog.dto.ArticleUpdateDTO;
 import org.wildcodeschool.myblog.model.*;
 import org.wildcodeschool.myblog.service.ArticleService;
 
@@ -88,13 +89,14 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArticleDTO);
     }
 
-    @PreAuthorize("#articleDetails.getAuthorIds().contains(authentication.principal.id)")
+//    @PreAuthorize("#articleDetails.getAuthorIds().contains(authentication.principal.id)")
     @PutMapping("/{id}")
-    public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody Article articleDetails) {
-        System.out.println("Article Authors IDs: " + articleDetails.getAuthorIds());
-        System.out.println("Authenticated User ID: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody ArticleUpdateDTO articleUpdateDTO) {
+//        System.out.println("Article Authors IDs: " + articleUpdateDTO.getArticleAuthorDTOs().toString());
+//        System.out.println("Authenticated User ID: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        System.out.println("Valeur de isPublished reçue : " + articleUpdateDTO.getPublished());
 
-        ArticleDTO updatedArticle = articleService.updateArticle(id, articleDetails);
+        ArticleDTO updatedArticle = articleService.updateArticle(id, articleUpdateDTO);
         if(updatedArticle == null){
             return ResponseEntity.notFound().build();
         }

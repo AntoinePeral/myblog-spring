@@ -17,11 +17,13 @@ public class ArticleMapper {
         articleDTO.setContent(article.getContent());
         articleDTO.setUpdatedAt(article.getUpdatedAt());
         articleDTO.setCreatedAt(article.getCreatedAt());
+        articleDTO.setPublished(article.getPublished());
         if (article.getCategory() != null) {
             articleDTO.setCategoryName(article.getCategory().getName());
         }
         if (article.getImages() != null) {
             articleDTO.setImageUrls(article.getImages().stream().map(Image::getUrl).collect(Collectors.toList()));
+            articleDTO.setImageIds(article.getImages().stream().map(Image::getId).collect(Collectors.toList()));
         }
 
         if (article.getArticleAuthors() != null) {
@@ -38,6 +40,7 @@ public class ArticleMapper {
                     .collect(Collectors.toList()));
         }
 
+        System.out.println("Article le rturn, isPublished = " + articleDTO.getPublished());
         return articleDTO;
     }
 

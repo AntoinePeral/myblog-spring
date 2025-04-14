@@ -37,6 +37,9 @@ public class Article {
     )
     private List<Image> images;
 
+    @Column(name = "is_published")
+    private boolean published;
+
 
     /* Getters & Setters */
     public Long getId(){
@@ -45,6 +48,14 @@ public class Article {
 
     public void setId(Long id){
         this.id = id;
+    }
+
+    public boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
     public String getTitle() {
