@@ -37,8 +37,8 @@ class CategoryControllerTest {
     @MockBean
     private JwtService jwtService;
 
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+//    @MockBean
+//    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
     @Test

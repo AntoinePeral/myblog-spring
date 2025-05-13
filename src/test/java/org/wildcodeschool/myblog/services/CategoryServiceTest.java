@@ -1,4 +1,4 @@
-package org.wildcodeschool.myblog.service;
+package org.wildcodeschool.myblog.services;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -6,9 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.wildcodeschool.myblog.dto.CategoryDTO;
+import org.wildcodeschool.myblog.exception.CategoryNotFoundException;
+import org.wildcodeschool.myblog.exception.ResourceNotFoundException;
 import org.wildcodeschool.myblog.mapper.CategoryMapper;
 import org.wildcodeschool.myblog.model.Category;
 import org.wildcodeschool.myblog.repository.CategoryRepository;
+import org.wildcodeschool.myblog.service.CategoryService;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,7 +88,7 @@ class CategoryServiceTest {
 
         // Act & Assert
         assertThatThrownBy(() -> categoryService.getCategoryById(99L))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(CategoryNotFoundException.class)
                 .hasMessage("Aucune catégorie avec l'id : 99 n'a été trouvé");
     }
 
